@@ -1,11 +1,12 @@
 # Título del trabajo
 
-Descripción breve del proyecto a realizar (2-3 frases).
-
+Juego del trivial
 ## Integrantes del equipo
 
-Nombres, apellidos, y usuario GitHub de los integrantes del equipo.
+Sophia Villanova, Carlos Cruz y Aitana Carretero (@Aitana-C).
 
 ## Objetivos del trabajo
 
-Lista de los objetivos que se persiguen con el trabajo propuesto.
+- Implementar juego de trivial con preguntas de varios temas.
+- Asignación de puntos según las respuestas correctas y elegir ganador.
+- Asignar roles de jugadores.
