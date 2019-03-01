@@ -3,7 +3,7 @@
 Juego del trivial
 ## Integrantes del equipo
 
-Sophia Villanova, Carlos Cruz y Aitana Carretero (@Aitana-C).
+Sophia Villanova (@SophiaVillanova), Carlos Cruz y Aitana Carretero (@Aitana-C).
 
 ## Objetivos del trabajo
 
