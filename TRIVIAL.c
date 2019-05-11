@@ -32,13 +32,10 @@ struct jugador
 	int descartado;
 	int dado_turno;
 	int dado_juego;
-	struct quesitos
-	{
-		int C;
-		int T;
-		int D;
-		int G;
-	};
+	int quesitoT;
+	int quesitoD;
+	int quesitoC;
+	int quesitoG;
 };
 
 struct pregunta{
@@ -75,14 +72,9 @@ char tablero(int i1, int j1, char pieza);
 	//Prototipo de la funcion color
 	void color(int valor);
 
-//Prototipo de la funcion pregunta
-void pregunta();
-
 //Prototipo de la funcion casilla
 char casilla(i1,j1);
 
-//Prototipo de la funcion impresion de pregunta
-char impresion_pregunta(int numero_jugador,char caracter);
 
 int main()
 {
@@ -98,10 +90,13 @@ int main()
 	int num_jugadores;
 	int i;
 	int jugador_mayor;
-	int pieza, contador=0;
+	int pieza;
 	char tablero_inicio;
 	struct pregunta preguntas[17];
 	char caracter;
+	int k=0;
+	int quesitos;
+	int jugador_ganador;
 	
 	do
 	{
@@ -149,6 +144,10 @@ int main()
 					scanf("%s", jugadores[i].nombre);
 					jugadores[i].io=8;
 					jugadores[i].jo=1;
+					jugadores[i].quesitoT=0;
+					jugadores[i].quesitoC=0;
+					jugadores[i].quesitoD=0;
+					jugadores[i].quesitoG=0;
 					jugadores_orden[i]=jugadores[i];
 				}
 				jugador_mayor=turno(num_jugadores);
@@ -281,13 +280,73 @@ int main()
 				char categoria;
 				int numero_pregunta;
 				char respuesta_jugador;
-				int x;
-				
-				pregunta();
+				int i=0;
+				int n=0;
+				int j;
+	
+	FILE*fichero;
+	
+	fichero=fopen("preguntas.txt","r");
+	
+	if (fichero==NULL)
+	{
+		printf("Error en la apertura del fichero");
+		return -1;
+	}
+	
+	while(fscanf(fichero,"%s %s %s %s %d %c %s", preguntas[n].pregunta,preguntas[n].opcionA,preguntas[n].opcionB,preguntas[n].opcionC,&preguntas[n].numero, &preguntas[n].respuesta,preguntas[n].categoria)!=EOF)
+	{
+		preguntas[n].long_p=strlen(preguntas[n].pregunta);
+		preguntas[n].long_opA=strlen(preguntas[n].opcionA);
+		preguntas[n].long_opB=strlen(preguntas[n].opcionB);
+		preguntas[n].long_opC=strlen(preguntas[n].opcionC);
+		n++;
+	}
+	
+	fclose(fichero);
+
+	//printf("Contador: %d\n",n);
+
+	for (i=0;i<n;i++)
+	{
+		
+		for (j=0;j<preguntas[i].long_p;j++)
+		{
+			if(preguntas[i].pregunta[j]=='_')
+			{
+				preguntas[i].pregunta[j]=' ';
+			}
+		}
+		for (j=0;j<preguntas[i].long_opA;j++)
+		{
+			if(preguntas[i].opcionA[j]=='_')
+			{
+				preguntas[i].opcionA[j]=' ';
+			}
+		}
+		for (j=0;j<preguntas[i].long_opB;j++)
+		{
+			if(preguntas[i].opcionB[j]=='_')
+			{
+				preguntas[i].opcionB[j]=' ';
+			}
+		}
+		for(j=0;j<preguntas[i].long_opC;j++)	
+		{
+			if(preguntas[i].opcionC[j]=='_')
+			{
+				preguntas[i].opcionC[j]=' ';
+			}
+		}
+//	printf("%s\n %s\n %s\n %s\n %d\n %c\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC,preguntas[i].numero,preguntas[i].respuesta,preguntas[i].categoria);	
+	}
 				do
 				{
 					for (i=0; i<num_jugadores; i++)
 					{
+						do
+						{
+						k==0;
 						printf("Es el turno de %s:\n", jugadores_orden[i].nombre);
 						jugadores_orden[i].dado_juego=tirardado();
 						
@@ -296,25 +355,190 @@ int main()
 						jugadores_orden[i].posicion=tablero(jugadores_orden[i].i1, jugadores_orden[i].j1, jugadores_orden[i].pieza);
 						caracter=casilla(jugadores_orden[i].i1,jugadores_orden[i].j1);
 						printf("%c\n",caracter);
-						x=impresion_pregunta(jugadores_orden[i].numero,caracter);
-						
-						jugadores_orden[i].io=jugadores_orden[i].i1;
-						jugadores_orden[i].jo=jugadores_orden[i].j1;
-					}
-				} while (contador==10); //Cuando alguien gane, contador de quesitos == 4
-				
-				break;
-			
-			case 3:
-				printf("HASTA PRONTO!\n");
-				break;
-				
-			default:
-				printf("OPCION INCORRECTA, VUELVE A INTENTARLO\n");
-		}
-	} while (opcion!=3);
-}
 
+				srand (time (0));
+				numero_pregunta = rand () % 4 + 1;
+				
+			switch(caracter)
+			{
+				case 'Q':
+					printf("Tienes la oportunidad de comerte un QUESITO\nEscoge la categoria:\n");
+					printf(" D. Deportes\n C. Ciencias\n T.Television y Cine\n G. Geografia\n");
+					scanf("%c",&categoria);
+					for (k=0;k<17;k++)
+					{
+						if((numero_pregunta==preguntas[k].numero)&&(categoria==preguntas[k].categoria[0]))
+						{
+							printf("%s\n %s\n %s\n %s\n",preguntas[k].pregunta,preguntas[k].opcionA,preguntas[k].opcionB,preguntas[k].opcionC);
+							fflush(stdin);
+							scanf("%c",&respuesta_jugador);
+							if(respuesta_jugador==preguntas[k].respuesta)
+								{
+									printf("RESPUESTA CORRECTA!!\nHas ganado el QUESITO de la categoria %s",preguntas[k].categoria[0]);
+									switch(categoria)
+									{
+										case 'T':
+											jugadores_orden[i].quesitoT=1;
+											k++;
+										break;
+										case 'C':
+											jugadores_orden[i].quesitoC=1;
+											k++;
+										break;
+										case 'G':
+											jugadores_orden[i].quesitoG=1;
+											k++;
+										break;
+										case 'D':
+											jugadores_orden[i].quesitoD=1;
+											k++;
+										break;
+									}
+								}
+							else 
+								{
+									printf("RESPUESTA INCORRECTA\n");
+								}
+						break;
+						}
+						else 
+						{
+						continue;	
+						}
+					}
+				break;
+				case 'T':
+				for (i=0;i<17;i++)
+				{
+					if((numero_pregunta==preguntas[i].numero)&&(caracter==preguntas[i].categoria))
+					{
+						printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
+						fflush(stdin);
+						scanf("%c",&respuesta_jugador);
+						if(respuesta_jugador==preguntas[i].respuesta)
+							{
+								printf("RESPUESTA CORRECTA!!,continuas jugando\n");
+								k++;
+							}
+						else 
+							{
+								printf("RESPUESTA INCORRECTA\n");
+							}
+					break;
+					}
+					else 
+					{
+					continue;	
+					}
+				}
+				break;
+				case 'C':
+				for (i=0;i<17;i++)
+				{
+					if((numero_pregunta==preguntas[i].numero)&&(caracter==preguntas[i].categoria[0]))
+					{
+						printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
+						fflush(stdin);
+						scanf("%c",&respuesta_jugador);
+						if(respuesta_jugador==preguntas[i].respuesta)
+							{
+								printf("RESPUESTA CORRECTA!!,continuas jugando\n");
+								k++;
+							}
+						else 
+							{
+								printf("RESPUESTA INCORRECTA\n");
+							}
+					break;
+					}
+					else 
+					{
+					continue;	
+					}
+				}
+				break;
+				case 'G':
+				for (i=0;i<17;i++)
+				{
+					if((numero_pregunta==preguntas[i].numero)&&(caracter==preguntas[i].categoria))
+					{
+						printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
+						fflush(stdin);
+						scanf("%c",&respuesta_jugador);
+						if(respuesta_jugador==preguntas[i].respuesta)
+							{
+								printf("RESPUESTA CORRECTA!!,continuas jugando\n");
+								k++;
+							}
+						else 
+							{
+								printf("RESPUESTA INCORRECTA\n");
+							}
+					break;
+					}
+					else 
+					{
+					continue;	
+					}
+				}
+				break;
+				case 'D':
+				for (i=0;i<17;i++)
+				{
+					if((numero_pregunta==preguntas[i].numero)&&(caracter==preguntas[i].categoria))
+					{
+						printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
+						fflush(stdin);
+						scanf("%c",&respuesta_jugador);
+						if(respuesta_jugador==preguntas[i].respuesta)
+							{
+								printf("RESPUESTA CORRECTA!!,continuas jugando\n");
+								k++;
+							}
+						else 
+							{
+								printf("RESPUESTA INCORRECTA\n");
+							}
+					break;
+					}
+					else 
+					{
+					continue;	
+					}
+				}
+				break;
+				case '+':
+					k++;
+				break;
+				case '-':
+					printf("PIERDES EL TURNO\n");
+				break;
+				}
+									jugadores_orden[i].io=jugadores_orden[i].i1;
+									jugadores_orden[i].jo=jugadores_orden[i].j1;
+									quesitos=jugadores_orden[i].quesitoT+jugadores_orden[i].quesitoG+jugadores_orden[i].quesitoC+jugadores_orden[i].quesitoD;
+									
+									if(quesitos==4)
+									{
+									jugador_ganador=i;	
+									}
+								
+							}while(k==1&&quesitos!=4);
+								}
+								printf("%s GANADOR",jugadores_orden[i].nombre);
+							} while (quesitos!=4); //Cuando alguien gane, contador de quesitos == 4
+							
+							break;
+						
+						case 3:
+							printf("HASTA PRONTO!\n");
+							break;
+							
+						default:
+							printf("OPCION INCORRECTA, VUELVE A INTENTARLO\n");
+					}
+				} while (opcion!=3);
+			}
 
 //CUERPOS DE LAS FUNCIONES
 
@@ -714,74 +938,6 @@ void color(int valor)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), valor);
 }
 
-//Cuerpo de la funcion pregunta
-void pregunta()
-{
-	struct pregunta preguntas[17];
-	int i=0;
-	int n=0;
-	int j;
-	
-	FILE*fichero;
-	
-	fichero=fopen("preguntas.txt","r");
-	
-	if (fichero==NULL)
-	{
-		printf("Error en la apertura del fichero");
-		return -1;
-	}
-	
-	while(fscanf(fichero,"%s %s %s %s %d %c %s", preguntas[n].pregunta,preguntas[n].opcionA,preguntas[n].opcionB,preguntas[n].opcionC,&preguntas[n].numero, &preguntas[n].respuesta,preguntas[n].categoria)!=EOF)
-	{
-		preguntas[n].long_p=strlen(preguntas[n].pregunta);
-		preguntas[n].long_opA=strlen(preguntas[n].opcionA);
-		preguntas[n].long_opB=strlen(preguntas[n].opcionB);
-		preguntas[n].long_opC=strlen(preguntas[n].opcionC);
-		n++;
-	}
-	
-	fclose(fichero);
-
-	printf("Contador: %d\n",n);
-
-	
-	for (i=0;i<n;i++)
-	{
-		
-		for (j=0;j<preguntas[i].long_p;j++)
-		{
-			if(preguntas[i].pregunta[j]=='_')
-			{
-				preguntas[i].pregunta[j]=' ';
-			}
-		}
-		for (j=0;j<preguntas[i].long_opA;j++)
-		{
-			if(preguntas[i].opcionA[j]=='_')
-			{
-				preguntas[i].opcionA[j]=' ';
-			}
-		}
-		for (j=0;j<preguntas[i].long_opB;j++)
-		{
-			if(preguntas[i].opcionB[j]=='_')
-			{
-				preguntas[i].opcionB[j]=' ';
-			}
-		}
-		for(j=0;j<preguntas[i].long_opC;j++)	
-		{
-			if(preguntas[i].opcionC[j]=='_')
-			{
-				preguntas[i].opcionC[j]=' ';
-			}
-		}
-	//	printf("%s\n %s\n %s\n %s\n %d\n %c\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC,preguntas[i].numero,preguntas[i].respuesta,preguntas[i].categoria);
-		
-	}
-}
-
 //Cuerpo de la funcion casilla
 char casilla(i1,j1)
 {
@@ -820,168 +976,4 @@ char casilla(i1,j1)
 			}
 }
 
-//Cuerpo de la funcion impresion de la pregunta
-char impresion_pregunta(int numero_jugador,char caracter)
-{
-	int i;
-	int numero_pregunta;
-	struct pregunta preguntas[17];
-	struct jugador jugadores_orden[4];
-	char categoria;
-	char respuesta_jugador;
 
-	srand (time (0));
-	numero_pregunta = rand () % 4 + 1;
-	
-switch(caracter)
-{
-	case 'Q':
-		printf("Tienes la oportunidad de comerte un QUESITO\nEscoge la categoria:\n");
-		printf(" D. Deportes\n C. Ciencias\n T.Television y Cine\n G. Geografia\n");
-		scanf("%c",&categoria);
-		for (i=0;i<17;i++)
-		{
-			if((numero_pregunta==preguntas[i].numero)&&(categoria==preguntas[i].categoria))
-			{
-				printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
-				scanf("%c",&respuesta_jugador);
-				if(respuesta_jugador==preguntas[i].respuesta)
-					{
-						printf("RESPUESTA CORRECTA!!\nHas ganado el QUESITO de la categoria %s",preguntas[i].categoria);
-						switch(categoria)
-						{
-							case 'T':
-								return 'T';
-							break;
-							case 'C':
-								return 'C';
-							break;
-							case 'G':
-								return 'G';
-							break;
-							case 'D':
-								return 'D';
-							break;
-						}
-					}
-				else 
-					{
-						printf("RESPUESTA INCORRECTA");
-						return 'F';
-					}
-			break;
-			}
-			else 
-			{
-			continue;	
-			}
-		}
-	break;
-	case 'T':
-	for (i=0;i<17;i++)
-	{
-		if((numero_pregunta==preguntas[i].numero)&&(caracter==preguntas[i].categoria))
-		{
-			printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
-			scanf("%c",&respuesta_jugador);
-			if(respuesta_jugador==preguntas[i].respuesta)
-				{
-					printf("RESPUESTA CORRECTA!!,continuas jugando\n");
-					return 'V';
-				}
-			else 
-				{
-					printf("RESPUESTA INCORRECTA");
-					return 'F';
-				}
-		break;
-		}
-		else 
-		{
-		continue;	
-		}
-	}
-	break;
-	case 'C':
-	for (i=0;i<17;i++)
-	{
-		if((numero_pregunta==preguntas[i].numero)&&(caracter==preguntas[i].categoria))
-		{
-			printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
-			scanf("%c",&respuesta_jugador);
-			if(respuesta_jugador==preguntas[i].respuesta)
-				{
-					printf("RESPUESTA CORRECTA!!,continuas jugando\n");
-					return 'V';
-				}
-			else 
-				{
-					printf("RESPUESTA INCORRECTA");
-					return 'F';
-				}
-		break;
-		}
-		else 
-		{
-		continue;	
-		}
-	}
-	break;
-	case 'G':
-	for (i=0;i<17;i++)
-	{
-		if((numero_pregunta==preguntas[i].numero)&&(caracter==preguntas[i].categoria))
-		{
-			printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
-			scanf("%c",&respuesta_jugador);
-			if(respuesta_jugador==preguntas[i].respuesta)
-				{
-					printf("RESPUESTA CORRECTA!!,continuas jugando\n");
-					return 'V';
-				}
-			else 
-				{
-					printf("RESPUESTA INCORRECTA");
-					return 'F';
-				}
-		break;
-		}
-		else 
-		{
-		continue;	
-		}
-	}
-	break;
-	case 'D':
-	for (i=0;i<17;i++)
-	{
-		if((numero_pregunta==preguntas[i].numero)&&(caracter==preguntas[i].categoria))
-		{
-			printf("%s\n %s\n %s\n %s\n",preguntas[i].pregunta,preguntas[i].opcionA,preguntas[i].opcionB,preguntas[i].opcionC);
-			scanf("%c",&respuesta_jugador);
-			if(respuesta_jugador==preguntas[i].respuesta)
-				{
-					printf("RESPUESTA CORRECTA!!,continuas jugando\n");
-					return 'V';
-				}
-			else 
-				{
-					printf("RESPUESTA INCORRECTA");
-					return 'F';
-				}
-		break;
-		}
-		else 
-		{
-		continue;	
-		}
-	}
-	break;
-	case '+':
-		return 'V';
-	break;
-	case '-':
-		return 'F';
-	break;
-}
-}
