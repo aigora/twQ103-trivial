@@ -359,7 +359,7 @@ int main()
 							caracter=casilla(jugadores_orden[i].i1, jugadores_orden[i].j1);
 
 							srand (time (NULL));
-							numero_pregunta = rand () % 5;
+							numero_pregunta = 1 + rand () % (5-1);
 							
 							//printf("Num_preguntas %d\n", numero_pregunta); //CONTROLADOR DE VARIABLES
 							//printf("Caracter %c\n", caracter); //CONTROLADOR DE VARIABLES
