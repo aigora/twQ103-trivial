@@ -139,6 +139,7 @@ int main()
 				system("cls");
 				do
 				{
+					printf("* * * T R I V I A L * * *\n");
 					printf("CUANTOS JUGADORES SOIS?\n");
 					scanf("%d", &num_jugadores);
 					
@@ -161,6 +162,7 @@ int main()
 					jugadores[i].quesitoG=0;
 					jugadores_orden[i]=jugadores[i];
 				}
+				
 				jugador_mayor=turno(num_jugadores);
 				printf("El primer turno es para %s\n", jugadores[jugador_mayor].nombre);
 				jugadores_orden[0]=jugadores[jugador_mayor];
@@ -293,7 +295,7 @@ int main()
 	
 				if (fichero==NULL)
 				{
-					printf("Error en la apertura del fichero");
+					printf("Error en la apertura del fichero\n");
 					return -1;
 				}
 	
@@ -367,9 +369,12 @@ int main()
 							switch(caracter)
 							{
 								case 'Q':
+									do
+									{
 									printf("Tienes la oportunidad de ganarte un QUESITO\nEscoge la categoria:\n");
 									printf(" D. Deportes\n C. Ciencias\n T.Television y Cine\n G. Geografia\n");
 									fflush(stdin);
+									
 									scanf("%c", &cat);
 									
 									switch (cat)
@@ -385,8 +390,12 @@ int main()
 											break;
 										case 'G':
 											strcpy(categoria, "Geografia");
-											break;
+											break;\
+										default: 
+											printf("OPCION INCORRECTA\n");
 									}
+									} while (cat!='D' && cat!='C' && cat!='T' && cat!='G');
+									
 									puts(categoria);
 									
 									for (k=0; k<17; k++)
@@ -394,11 +403,18 @@ int main()
 										y=strcmp(categoria,preguntas[k].categoria);
 										if ((numero_pregunta==preguntas[k].numero) && (y==0))
 										{
-											printf("ENTRO AL IF\n");
-											printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
-											fflush(stdin);
-											scanf("%c", &respuesta_jugador);
-											if(respuesta_jugador==preguntas[k].respuesta)
+											do
+											{
+												printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
+												fflush(stdin);
+												scanf("%c", &respuesta_jugador);
+												if (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C')
+												{
+													printf("OPCION INCORRECTA\n");
+												}
+											} while(respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C');
+											
+											if (respuesta_jugador==preguntas[k].respuesta)
 											{
 												printf("RESPUESTA CORRECTA!!\nHas ganado el QUESITO de la categoria %s\n", preguntas[k].categoria);
 												switch(cat)
@@ -455,9 +471,17 @@ int main()
 										y=strcmp(categoria,preguntas[k].categoria);
 										if ((numero_pregunta==preguntas[k].numero) && (y==0))
 										{
-											printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
-											fflush(stdin);
-											scanf("%c", &respuesta_jugador);
+											do
+											{
+												printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
+												fflush(stdin);
+												scanf("%c", &respuesta_jugador);
+												if (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C')
+													{
+														printf("OPCION INCORRECTA\n");
+													}
+											} while (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C');
+											
 											if(respuesta_jugador==preguntas[k].respuesta)
 											{
 												printf("RESPUESTA CORRECTA!!, puedes volver a tirar el dado\n");
@@ -497,9 +521,17 @@ int main()
 										y=strcmp(categoria,preguntas[k].categoria);
 										if ((numero_pregunta==preguntas[k].numero) && (y==0))
 										{
-											printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
-											fflush(stdin);
-											scanf("%c", &respuesta_jugador);
+											do
+											{
+												printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
+												fflush(stdin);
+												scanf("%c", &respuesta_jugador);
+												if (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C')
+													{
+														printf("OPCION INCORRECTA\n");
+													}
+											} while (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C');
+											
 											if(respuesta_jugador==preguntas[k].respuesta)
 											{
 												printf("RESPUESTA CORRECTA!!, puedes volver a tirar el dado\n");
@@ -539,9 +571,17 @@ int main()
 										y=strcmp(categoria,preguntas[k].categoria);
 										if ((numero_pregunta==preguntas[k].numero) && (y==0))
 										{
-											printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
-											fflush(stdin);
-											scanf("%c", &respuesta_jugador);
+											do
+											{
+												printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
+												fflush(stdin);
+												scanf("%c", &respuesta_jugador);
+												if (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C')
+													{
+														printf("OPCION INCORRECTA\n");
+													}
+											} while (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C');
+											
 											if(respuesta_jugador==preguntas[i].respuesta)
 											{
 												printf("RESPUESTA CORRECTA!!, puedes volver a tirar el dado\n");
@@ -581,9 +621,17 @@ int main()
 										y=strcmp(categoria,preguntas[k].categoria);
 										if ((numero_pregunta==preguntas[k].numero) && (y==0))
 										{
+											do
+											{
 											printf("%s\n %s\n %s\n %s\n", preguntas[k].pregunta, preguntas[k].opcionA, preguntas[k].opcionB, preguntas[k].opcionC);
 											fflush(stdin);
 											scanf("%c", &respuesta_jugador);
+											if (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C')
+											{
+												printf("OPCION INCORRECTA\n");
+											}
+											} while (respuesta_jugador!='A' && respuesta_jugador!='B' && respuesta_jugador!='C');
+											
 											if(respuesta_jugador==preguntas[k].respuesta)
 											{
 												printf("RESPUESTA CORRECTA!!\nPuedes volver a tirar el dado\n");
@@ -630,14 +678,12 @@ int main()
 							printf("ENHORABUENA %s ERES EL GANADOR!!!\nHAS DEMOSTRADO SER EL MAS LISTILLO DEL GRUPILLO\n", jugadores_orden[jugador_ganador].nombre);
 							break;
 							}
-				
 					
 				} while (jugadores_orden[0].quesitos!=4 || jugadores_orden[1].quesitos!=4 || jugadores_orden[2].quesitos!=4 || jugadores_orden[3].quesitos!=4); //CIERRA EL JUEGO
 							
 				break; //SWITCH CASE 2 MENU
 						
 			case 3:
-				system("cls");
 				printf("HASTA PRONTO!\n");
 				break;
 							
@@ -739,11 +785,12 @@ int turno(int num_jugadores)
 		
 		for(i=0; i<num_jugadores; i++)
 		{
-			if(jugadores[i].descartado==1)
+			if (jugadores[i].descartado==1)
 			{
 				vector_turnos[i]=0;
 				continue;
 			}
+			
 			printf("Jugador %d\n",i+1);
 			jugadores[i].dado_turno=tirardado();
 			vector_turnos[i]=jugadores[i].dado_turno;
@@ -753,8 +800,8 @@ int turno(int num_jugadores)
 		{
 			if(vector_turnos[i]>=mayor)
 			{
-			mayor=vector_turnos[i];
-			jugador_mayor=i;
+				mayor=vector_turnos[i];
+				jugador_mayor=i;
 			}
 		}
 	
@@ -769,7 +816,7 @@ int turno(int num_jugadores)
 				jugadores[i].descartado=1;
 			}
 		}
-	}while (w!=1);
+	} while (w!=1);
 	return jugador_mayor;
 }
 
