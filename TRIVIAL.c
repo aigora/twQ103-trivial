@@ -107,6 +107,7 @@ int main()
 	int j;
 	int g=0;
 	char cat;
+	int p=0;
 	
 	do
 	{
@@ -128,9 +129,9 @@ int main()
 				printf("Q = Quesito (Cian).\n");
 				printf("+ = Vuelve a tirar los dados.\n");
 				printf("- = Pierde el turno.\n\n");
-				printf("4. Cuando un jugador cae en la casilla de otro jugador, este no se mueve y automaticamente pierde el turno.\n\n");
-				printf("5. Cuando un jugador responde correctamente a una pregunta, podra lanzar el dado nuevamente (y asi hasta que se equivoque).\n\n");
-				printf("6. Si el jugador cae en la casilla del Quesito, tendra que elegir una categoria (que no haya ganado aun) y asi poder optar por el\nQuesito correspondiente. En caso de acertar, ganara el tan deseado Quesito, de lo contrario,\nno le quedara mas remedio que seguir buscando el tan deseado Quesito.\n\n");
+				printf("4. Cuando un jugador responde correctamente a una pregunta, podra lanzar el dado nuevamente (y asi hasta que se equivoque).\n\n");
+				printf("5. Si el jugador cae en la casilla del Quesito, tendra que elegir una categoria (que no haya ganado aun) y asi poder optar por el\nQuesito correspondiente. En caso de acertar, ganara el tan deseado Quesito, de lo contrario,\nno le quedara mas remedio que seguir buscando el tan deseado Quesito.\n\n");
+				printf("6. IMPORTANTE: En caso de que el jugador escoja un Quesito cuya categoria ya haya ganado, este no se le suma a los que ya tiene\ny perdera la oportunidad de ganar otro Quesito\n\n");
 				printf("7. El jugador que consiga los 4 Quesitos gana automaticamente el juego y se convierte en el CAMPEON LISTILLO\n(claro, hasta que volvais a jugar).\n\n\n");
 				break;
 				
@@ -141,11 +142,12 @@ int main()
 				{
 					printf("* * * T R I V I A L * * *\n");
 					printf("CUANTOS JUGADORES SOIS?\n");
+					fflush(stdin);
 					scanf("%d", &num_jugadores);
 					
 					if (num_jugadores<2 || num_jugadores>4)
 					{
-						printf("NUMERO DE JUGADORES NO PERMITIDO (MIN 2 Y MAX 4)\n");
+						printf("NUMERO DE JUGADORES INVALIDO DE SER UN NUMERO MAYOR A 2 Y MENOR A 4\n");
 					}
 					
 				} while(num_jugadores<2 || num_jugadores>4);
@@ -161,6 +163,7 @@ int main()
 					jugadores[i].quesitoD=0;
 					jugadores[i].quesitoG=0;
 					jugadores_orden[i]=jugadores[i];
+					jugadores_orden[i].pieza='!';
 				}
 				
 				jugador_mayor=turno(num_jugadores);
@@ -210,77 +213,72 @@ int main()
 				
 				// ELECCION DE PIEZAS POR TURNOS (NO SE PUEDEN REPETIR)	
 				for(i=0; i<num_jugadores; i++)
-				{	
-					if(i==0)
-					{
-						printf("%s, llego el momento de elegir tu pieza:\n", jugadores_orden[i].nombre);
-						printf("1. $\n");
-						printf("2. @\n");
-						printf("3. #\n");
-						printf("4. &\n");
-						scanf("%d", &pieza);
-						
-						switch (pieza)
-						{
-							case 1:
-								jugadores_orden[i].pieza='$';
-								break;
-								
-							case 2:
-								jugadores_orden[i].pieza='@';
-								break;
-								
-							case 3:
-								jugadores_orden[i].pieza='#';
-								break;
-								
-							case 4:
-								jugadores_orden[i].pieza='&';
-								break;
-								
-							default:
-								printf("NO EXISTE ESTA PIEZA\n");
-						}
-					}	
-					else
-					{
+				{
 						do
 						{
-							printf("%s, llego el momento de elegir tu pieza:\n", jugadores_orden[i].nombre);
-							printf("1. $\n");
-							printf("2. @\n");
-							printf("3. #\n");
-							printf("4. &\n");
-							scanf("%d", &pieza);
-						
-							switch (pieza)
+							p=0;
+								do
+								{
+								pieza=0;
+								printf("%s, llego el momento de elegir tu pieza:\n", jugadores_orden[i].nombre);
+								printf("1. $\n");
+								printf("2. @\n");
+								printf("3. #\n");
+								printf("4. &\n");
+								fflush(stdin);
+								scanf("%d", &pieza);
+								
+								switch (pieza)
+								{
+									case 1:
+										jugadores_orden[i].pieza='$';
+										break;
+									
+									case 2:
+										jugadores_orden[i].pieza='@';
+										break;
+									
+									case 3:
+										jugadores_orden[i].pieza='#';
+										break;
+									
+									case 4:
+										jugadores_orden[i].pieza='&';
+										break;
+									default:
+										printf("NO EXISTE ESTA PIEZA\n");
+								}
+								}while(pieza<1||pieza>4);
+							
+							switch(i)
 							{
+								case 0:
+									break;
 								case 1:
-									jugadores_orden[i].pieza='$';
+									if(jugadores_orden[i].pieza==jugadores_orden[0].pieza)
+									{
+										p=1;
+									}
 									break;
-								
 								case 2:
-									jugadores_orden[i].pieza='@';
+									if((jugadores_orden[i].pieza==jugadores_orden[0].pieza)||(jugadores_orden[i].pieza==jugadores_orden[1].pieza))
+									{
+										p=2;
+									}
 									break;
-								
 								case 3:
-									jugadores_orden[i].pieza='#';
+									if((jugadores_orden[i].pieza==jugadores_orden[0].pieza)||(jugadores_orden[i].pieza==jugadores_orden[1].pieza)||(jugadores_orden[i].pieza==jugadores_orden[2].pieza))
+									{
+										p=3;
+									}
 									break;
-								
-								case 4:
-									jugadores_orden[i].pieza='&';
-									break;
-								
-								default:
-									printf("NO EXISTE ESTA PIEZA\n");
 							}
 						
-							if(jugadores_orden[i].pieza==jugadores_orden[i-1].pieza)
+							if(p!=0)
 							{
-								printf("LAS PIEZAS NO PUEDEN SER IGUANLES, VUELVE A INTENTARLO\n");
+								printf("LAS PIEZAS NO PUEDEN SER IGUALES, VUELVE A INTENTARLO\n");
 							}
-						} while (jugadores_orden[i].pieza==jugadores_orden[i-1].pieza);
-					}
+						} while (p!=0);
 				}
 				
 				printf("TODO LISTO PARA DAR INICIO A ESTA AVENTURA, A POR LOS QUESITOS!\n\n");
@@ -700,7 +698,6 @@ int main()
 int menu()
 {
 	int opcion;
-
 		printf("BIENVENIDO AL MENU DE TRIVIAL\n");
 		printf("El mejor juego para dartela del listillo y humillar a tus amigos!!!\n\n");
 		printf("1. Reglas del juego\n");
@@ -715,11 +712,11 @@ int menu()
 int tirardado()
 {
 	char enter;
-	printf("PULSE \"ENTER\" para tirar el dado\n");
+	printf("Pulse \"ENTER\" para tirar el dado\n");
 	enter = getch();
 	
 	int dado=0;
-  	srand (time (NULL));
+  	srand (time (0));
   	dado = rand () % 6 + 1;
   	
   	switch(dado)
@@ -774,8 +771,8 @@ int tirardado()
 int turno(int num_jugadores)
 {
 	int i=0, mayor=0, jugador_mayor=0, x=0, w=0;
-	int vector_turnos[num_jugadores], vector_turnos_repetidos[4];
-	struct jugador jugadores[4];
+	int vector_turnos[num_jugadores], vector_turnos_repetidos[5];
+	struct jugador jugadores[5];
 
 	do
 	{
@@ -783,7 +780,7 @@ int turno(int num_jugadores)
 		mayor=0;
 		jugador_mayor=0;
 		
-		for(i=0; i<num_jugadores; i++)
+		for(i=0; i<num_jugadores; i++) 
 		{
 			if (jugadores[i].descartado==1)
 			{
